@@ -4,6 +4,22 @@ project(PhysicsPlayground LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_executable(PhysicsPlayground
+        src/Renderer/Primitives/Primitive.cpp
+        src/Renderer/Primitives/Primitive.h
+        src/Renderer/Primitives/RectangleMesh.cpp
+        src/Renderer/Primitives/RectangleMesh.h
+        src/Renderer/Renderer.cpp
+        src/Renderer/Renderer.h
+        src/main.cpp
+        src/Renderer/Shader.cpp
+        src/Renderer/Shader.h
+        src/Renderer/Primitives/TriangleMesh.cpp
+        src/Renderer/Primitives/TriangleMesh.h
+        src/Renderer/Primitives/CircleMesh.cpp
+        src/Renderer/Primitives/CircleMesh.h
+)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -49,9 +65,6 @@ target_include_directories(imgui_lib PUBLIC
 )
 target_link_libraries(imgui_lib PUBLIC glfw glad_lib)
 
-add_executable(PhysicsPlayground
-        src/main.cpp
-)
 
 target_link_libraries(PhysicsPlayground
         PRIVATE
@@ -64,3 +77,7 @@ target_link_libraries(PhysicsPlayground
 target_include_directories(PhysicsPlayground PRIVATE
         ${CMAKE_SOURCE_DIR}/src
 )
+
+
+set(ASSET_DIR_PATH "${CMAKE_SOURCE_DIR}/src/Renderer/Assets/")
+target_compile_definitions(PhysicsPlayground PRIVATE ASSET_DIR_PATH="${ASSET_DIR_PATH}")

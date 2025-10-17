@@ -8,6 +8,13 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
+#include "Renderer/Renderer.h"
+#include "Renderer/Primitives/CircleMesh.h"
+#include "Renderer/Primitives/RectangleMesh.h"
+#include "Renderer/Primitives/TriangleMesh.h"
+
+#include "glm/gtc/matrix_transform.hpp"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -15,13 +22,15 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 int main()
 {
+	constexpr int width = 800;
+	constexpr int height = 600;
 	// --- GLFW init ---
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL + ImGui", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(width, height, "OpenGL + ImGui", nullptr, nullptr);
 	if (!window)
 		return -1;
 
@@ -30,7 +39,7 @@ int main()
 	glfwSwapInterval(1); // VSync
 
 	// --- GLAD init ---
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cerr << "GLAD init failed\n";
 		return -1;
@@ -39,16 +48,26 @@ int main()
 	// --- ImGui init ---
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 
+	Renderer renderer(800, 600);
+	RectangleMesh rect;
+	TriangleMesh tri;
+	CircleMesh circle(36);
+
+	glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(width / 2.0f, height / 2.0f, 0.0f));
+	transform = glm::scale(transform, glm::vec3(200.0f, 200.0f, 1.0f));
+
 	// --- Render loop ---
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
+
+		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Start ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -62,10 +81,12 @@ int main()
 
 		// Rendering
 		ImGui::Render();
-		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+		renderer.DrawPrimitive(rect, transform, {1.0f, 1.0f, 0.0f});
+		renderer.DrawPrimitive(tri, transform, {0.0f, 1.0f, 1.0f});
+		renderer.DrawPrimitive(circle, transform, {1.0f, 0.0f, 1.0f});
+
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
 	}
 
