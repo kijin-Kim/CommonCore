@@ -9,15 +9,25 @@
 CircleMesh::CircleMesh(int segments)
 	: segmentCount_(segments)
 {
+}
+
+CircleMesh::~CircleMesh()
+{
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(1, &vbo_);
+}
+
+void CircleMesh::UploadData()
+{
 	std::vector<float> vertices;
-	vertices.reserve((segments + 2) * 5);
+	vertices.reserve((segmentCount_ + 2) * 5);
 
 	// 중심점
 	vertices.insert(vertices.end(), {0.f, 0.f, 1.f, 1.f, 1.f});
 
-	for (int i = 0; i <= segments; ++i)
+	for (int i = 0; i <= segmentCount_; ++i)
 	{
-		float angle = i * 2.0f * glm::pi<float>() / segments;
+		float angle = i * 2.0f * glm::pi<float>() / segmentCount_;
 		vertices.push_back(std::cos(angle) * 0.5f);
 		vertices.push_back(std::sin(angle) * 0.5f);
 		vertices.push_back(1.f);
@@ -36,12 +46,6 @@ CircleMesh::CircleMesh(int segments)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
 	glBindVertexArray(0);
-}
-
-CircleMesh::~CircleMesh()
-{
-	glDeleteVertexArrays(1, &vao_);
-	glDeleteBuffers(1, &vbo_);
 }
 
 void CircleMesh::Bind() const

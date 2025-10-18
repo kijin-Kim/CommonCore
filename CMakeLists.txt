@@ -18,6 +18,16 @@ add_executable(PhysicsPlayground
         src/Renderer/Primitives/TriangleMesh.h
         src/Renderer/Primitives/CircleMesh.cpp
         src/Renderer/Primitives/CircleMesh.h
+        src/Core/Application.cpp
+        src/Core/Application.h
+        src/Core/Layers/Layer.cpp
+        src/Core/Layers/Layer.h
+        src/Core/Layers/MainLayer.cpp
+        src/Core/Layers/MainLayer.h
+        src/Core/Layers/ImGuiLayer.cpp
+        src/Core/Layers/ImGuiLayer.h
+        src/Renderer/Primitives/PrimitiveVertex.cpp
+        src/Renderer/Primitives/PrimitiveVertex.h
 )
 
 include(FetchContent)
