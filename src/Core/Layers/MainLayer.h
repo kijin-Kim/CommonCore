@@ -1,10 +1,8 @@
 #pragma once
-#include "Layer.h"
+#include <vector>
 
-#include "Renderer/Primitives/CircleMesh.h"
-#include "Renderer/Primitives/RectangleMesh.h"
-#include "Renderer/Primitives/TriangleMesh.h"
-#include <glm/glm.hpp>
+#include "Layer.h"
+#include "Physics/Object.h"
 
 
 class MainLayer : public ILayer
@@ -16,8 +14,5 @@ public:
 	virtual void OnRender(Renderer& renderer) override;
 
 private:
-	RectangleMesh rect_;
-	TriangleMesh tri_;
-	CircleMesh circle_;
-	glm::mat4 transform_;
+	std::vector<Object> objects_;
 };

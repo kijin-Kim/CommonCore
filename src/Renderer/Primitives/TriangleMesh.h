@@ -4,7 +4,7 @@
 class TriangleMesh : public IPrimitive
 {
 public:
-	TriangleMesh() = default;
+	explicit TriangleMesh( const glm::vec4& color);
 	virtual ~TriangleMesh();
 	virtual void UploadData() override;
 	virtual void Bind() const override;

@@ -28,6 +28,10 @@ add_executable(PhysicsPlayground
         src/Core/Layers/ImGuiLayer.h
         src/Renderer/Primitives/PrimitiveVertex.cpp
         src/Renderer/Primitives/PrimitiveVertex.h
+        src/Physics/Object.cpp
+        src/Physics/Object.h
+        src/Physics/RigidBody.cpp
+        src/Physics/RigidBody.h
 )
 
 include(FetchContent)

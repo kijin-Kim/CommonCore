@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <memory>
 
 #include "Shader.h"
 
@@ -16,7 +17,7 @@ public:
 
 	void Init(int width, int height);
 
-	void DrawPrimitive(const IPrimitive& mesh, const glm::mat4& transform, const glm::vec3& color) const;
+	void DrawPrimitive(const std::unique_ptr<IPrimitive>& mesh, const glm::mat4& transform) const;
 
 private:
 	Shader shader_;

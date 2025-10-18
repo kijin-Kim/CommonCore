@@ -3,6 +3,11 @@
 
 #include "PrimitiveVertex.h"
 
+RectangleMesh::RectangleMesh(const glm::vec4& color)
+	: IPrimitive(color)
+{
+}
+
 RectangleMesh::~RectangleMesh()
 {
 	glDeleteVertexArrays(1, &vao_);
@@ -18,16 +23,13 @@ void RectangleMesh::UploadData()
 
 	glBindVertexArray(vao_);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(PrimitiveVertex::RectangleVertices), PrimitiveVertex::RectangleVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(PrimitiveVertex::RectangleVertices), PrimitiveVertex::RectangleVertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PrimitiveVertex::RectangleIndices), PrimitiveVertex::RectangleIndices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PrimitiveVertex::RectangleIndices), PrimitiveVertex::RectangleIndices.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
-
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 	glBindVertexArray(0);
 }
 

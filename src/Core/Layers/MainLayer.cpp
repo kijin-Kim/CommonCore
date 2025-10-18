@@ -1,32 +1,40 @@
-//
-// Created by kijin on 2025-10-18.
-//
-
 #include "MainLayer.h"
-#include "Renderer/Renderer.h"
+#include <memory>
+
+#include "Physics/Object.h"
+
+#include "Renderer/Primitives/CircleMesh.h"
 #include "glm/ext/matrix_transform.hpp"
 
 MainLayer::MainLayer()
-	: circle_(64)
 {
+	constexpr glm::vec4 color1 = glm::vec4(1.0f, 0.5f, 0.2f, 1.0f);
+	constexpr glm::vec4 color2 = glm::vec4(0.2f, 0.5f, 1.0f, 1.0f);
+	constexpr glm::vec4 color3 = glm::vec4(0.5f, 0.2f, 0.2f, 1.0f);
+
+	objects_.emplace_back(std::make_unique<CircleMesh>(color3));
 }
 
 void MainLayer::OnInit()
 {
-	rect_.UploadData();
-	tri_.UploadData();
-	circle_.UploadData();
+	for (Object& object : objects_)
+	{
+		object.OnInit();
+	}
 }
 
 void MainLayer::OnUpdate(float deltaTime)
 {
-	transform_ = glm::translate(glm::mat4(1.0f), glm::vec3(400, 300, 0.0f));
-	transform_ = glm::scale(transform_, glm::vec3(200.0f, 200.0f, 1.0f));
+	for (Object& object : objects_)
+	{
+		object.OnUpdate(deltaTime);
+	}
 }
 
 void MainLayer::OnRender(Renderer& renderer)
 {
-	renderer.DrawPrimitive(rect_, transform_, {1.0f, 1.0f, 0.0f});
-	renderer.DrawPrimitive(tri_, transform_, {0.0f, 1.0f, 1.0f});
-	renderer.DrawPrimitive(circle_, transform_, {1.0f, 0.0f, 1.0f});
+	for (Object& object : objects_)
+	{
+		object.OnRender(renderer);
+	}
 }
