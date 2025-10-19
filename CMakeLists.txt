@@ -1,38 +1,12 @@
 cmake_minimum_required(VERSION 4.0)
-project(PhysicsPlayground LANGUAGES C CXX)
+project(CommonCore LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(PhysicsPlayground
-        src/Renderer/Primitives/Primitive.cpp
-        src/Renderer/Primitives/Primitive.h
-        src/Renderer/Primitives/RectangleMesh.cpp
-        src/Renderer/Primitives/RectangleMesh.h
-        src/Renderer/Renderer.cpp
-        src/Renderer/Renderer.h
-        src/main.cpp
-        src/Renderer/Shader.cpp
-        src/Renderer/Shader.h
-        src/Renderer/Primitives/TriangleMesh.cpp
-        src/Renderer/Primitives/TriangleMesh.h
-        src/Renderer/Primitives/CircleMesh.cpp
-        src/Renderer/Primitives/CircleMesh.h
-        src/Core/Application.cpp
-        src/Core/Application.h
-        src/Core/Layers/Layer.cpp
-        src/Core/Layers/Layer.h
-        src/Core/Layers/MainLayer.cpp
-        src/Core/Layers/MainLayer.h
-        src/Core/Layers/ImGuiLayer.cpp
-        src/Core/Layers/ImGuiLayer.h
-        src/Renderer/Primitives/PrimitiveVertex.cpp
-        src/Renderer/Primitives/PrimitiveVertex.h
-        src/Physics/Object.cpp
-        src/Physics/Object.h
-        src/Physics/RigidBody.cpp
-        src/Physics/RigidBody.h
-)
+file(GLOB_RECURSE COMMON_SOURCE_FILES src/*.cpp src/*.h)
+
+add_library(CommonCore ${COMMON_SOURCE_FILES})
 
 include(FetchContent)
 
@@ -80,18 +54,20 @@ target_include_directories(imgui_lib PUBLIC
 target_link_libraries(imgui_lib PUBLIC glfw glad_lib)
 
 
-target_link_libraries(PhysicsPlayground
-        PRIVATE
+target_link_libraries(CommonCore
+        PUBLIC
         glad_lib
         glfw
         glm
         imgui_lib
 )
 
-target_include_directories(PhysicsPlayground PRIVATE
-        ${CMAKE_SOURCE_DIR}/src
+target_include_directories(CommonCore PUBLIC
+        ${CommonCore_SOURCE_DIR}/src
 )
 
+set(ASSET_DIR_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
+target_compile_definitions(CommonCore PRIVATE ASSET_DIR_PATH="${ASSET_DIR_PATH}")
 
-set(ASSET_DIR_PATH "${CMAKE_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(PhysicsPlayground PRIVATE ASSET_DIR_PATH="${ASSET_DIR_PATH}")
+
+
