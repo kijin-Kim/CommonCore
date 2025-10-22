@@ -3,8 +3,8 @@
 
 #include "PrimitiveVertex.h"
 
-RectangleMesh::RectangleMesh(const glm::vec4& color)
-	: IPrimitive(color)
+RectangleMesh::RectangleMesh(const glm::vec4& color, DrawMode drawMode)
+	: IPrimitive(color, drawMode)
 {
 }
 
@@ -45,5 +45,5 @@ void RectangleMesh::Unbind() const
 
 void RectangleMesh::Draw() const
 {
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(drawMode_ == DrawMode::Filled ? GL_TRIANGLES : GL_LINE_LOOP, 6, GL_UNSIGNED_INT, nullptr);
 }

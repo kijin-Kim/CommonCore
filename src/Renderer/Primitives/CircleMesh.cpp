@@ -7,8 +7,8 @@
 #include "PrimitiveVertex.h"
 
 
-CircleMesh::CircleMesh(const glm::vec4& color)
-	: IPrimitive(color)
+CircleMesh::CircleMesh(const glm::vec4& color, DrawMode drawMode)
+	: IPrimitive(color, drawMode)
 {
 }
 
@@ -20,7 +20,6 @@ CircleMesh::~CircleMesh()
 
 void CircleMesh::UploadData()
 {
-
 	glGenVertexArrays(1, &vao_);
 	glGenBuffers(1, &vbo_);
 	glBindVertexArray(vao_);
@@ -44,5 +43,5 @@ void CircleMesh::Unbind() const
 
 void CircleMesh::Draw() const
 {
-	glDrawArrays(GL_TRIANGLE_FAN, 0, PrimitiveVertex::CIRCLE_VERTEX_COUNT);
+	glDrawArrays(drawMode_ == DrawMode::Filled ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, PrimitiveVertex::CIRCLE_VERTEX_COUNT);
 }

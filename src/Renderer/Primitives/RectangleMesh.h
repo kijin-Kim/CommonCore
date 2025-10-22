@@ -5,7 +5,7 @@
 class RectangleMesh : public IPrimitive
 {
 public:
-	explicit RectangleMesh( const glm::vec4& color);
+	explicit RectangleMesh( const glm::vec4& color, DrawMode drawMode);
 	virtual ~RectangleMesh();
 	virtual void UploadData() override;
 	virtual void Bind() const override;

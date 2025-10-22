@@ -4,8 +4,8 @@
 
 #include "PrimitiveVertex.h"
 
-TriangleMesh::TriangleMesh(const glm::vec4& color)
-	: IPrimitive(color)
+TriangleMesh::TriangleMesh(const glm::vec4& color, DrawMode drawMode)
+	: IPrimitive(color, drawMode)
 {
 }
 
@@ -40,5 +40,5 @@ void TriangleMesh::Unbind() const
 
 void TriangleMesh::Draw() const
 {
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(drawMode_ == DrawMode::Filled ? GL_TRIANGLES : GL_LINE_LOOP, 0, 3);
 }

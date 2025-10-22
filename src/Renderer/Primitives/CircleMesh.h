@@ -4,7 +4,7 @@
 class CircleMesh : public IPrimitive
 {
 public:
-	explicit CircleMesh(const glm::vec4& color);
+	explicit CircleMesh(const glm::vec4& color, DrawMode drawMode);
 	virtual ~CircleMesh();
 	virtual void UploadData() override;
 	virtual void Bind() const override;

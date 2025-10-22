@@ -36,9 +36,6 @@ namespace PrimitiveVertex
 		std::array<float, CIRCLE_ARRAY_SIZE> vertices;
 		constexpr float CIRCLE_RADIUS = 0.5f;
 
-		vertices[0] = 0.0f;
-		vertices[1] = 0.0f;
-
 		for (int i = 0; i <= CIRCLE_SEGMENT_COUNT; ++i)
 		{
 			int baseIndex = 2 + i * 2;
