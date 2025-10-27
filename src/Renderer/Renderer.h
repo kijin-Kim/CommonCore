@@ -1,11 +1,7 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <memory>
 
+#include <glad/glad.h>
 #include "Shader.h"
-
-
-class IPrimitive;
 
 class Renderer
 {
@@ -15,11 +11,26 @@ public:
 		Init(width, height);
 	}
 
+	~Renderer();
 	void Init(int width, int height);
+	void Draw(unsigned int vao, GLenum mode, GLsizei vertexCount, const glm::mat4& transform, const glm::vec4& color);
+	void DrawCircle(const glm::vec2& position, float radius, const glm::vec4& color);
+	void DrawRectangle(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color);
 
-	void DrawPrimitive(const std::unique_ptr<IPrimitive>& mesh, const glm::mat4& transform) const;
+
+	void BeginScene();
+	void EndScene();
 
 private:
 	Shader shader_;
 	glm::mat4 projection_;
+
+	unsigned int circleVao_ = 0;
+	unsigned int circleVbo_ = 0;
+
+	unsigned int squareVao_ = 0;
+	unsigned int squareVbo_ = 0;
+	unsigned int squareEbo_ = 0;
+
+
 };

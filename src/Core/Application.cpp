@@ -87,7 +87,8 @@ void Application::Update(float deltaTime)
 
 void Application::Render(Renderer& renderer)
 {
-	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+//	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+	glClearColor(0.0f,0.0f,0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	for (const std::unique_ptr<ILayer>& layer : layers_)
 	{

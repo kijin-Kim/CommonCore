@@ -6,7 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB_RECURSE COMMON_SOURCE_FILES src/*.cpp src/*.h)
 
-add_library(CommonCore ${COMMON_SOURCE_FILES})
+add_library(CommonCore ${COMMON_SOURCE_FILES}
+        src/Renderer/Shapes.cpp
+        src/Renderer/Shapes.h
+        src/Renderer/ShapeUtility.cpp
+        src/Renderer/ShapeUtility.h)
 
 include(FetchContent)
 
@@ -67,7 +71,7 @@ target_include_directories(CommonCore PUBLIC
 )
 
 set(ASSET_DIR_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(CommonCore PRIVATE ASSET_DIR_PATH="${ASSET_DIR_PATH}")
+target_compile_definitions(CommonCore PUBLIC ASSET_DIR_PATH="${ASSET_DIR_PATH}" GLFW_INCLUDE_NONE)
 
 
 
