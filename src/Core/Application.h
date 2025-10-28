@@ -3,14 +3,20 @@
 #include <vector>
 
 #include "Layers/Layer.h"
+#include "EventBus.h"
 
 struct GLFWwindow;
 
 class Application
 {
 public:
-	explicit Application(std::vector<std::unique_ptr<ILayer> > layers, int width, int height);
+	explicit Application(int width, int height);
 	~Application();
+	template<typename T, typename... Args>
+	void AddLayer(Args&&... args)
+	{
+		layers_.push_back(std::make_unique<T>(eventBus_, std::forward<Args>(args)...));
+	}
 	void Run();
 	void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height);
 
@@ -23,4 +29,5 @@ private:
 	GLFWwindow* window_;
 	int width_;
 	int height_;
+	EventBus eventBus_;
 };

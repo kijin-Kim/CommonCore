@@ -10,7 +10,9 @@ add_library(CommonCore ${COMMON_SOURCE_FILES}
         src/Renderer/Shapes.cpp
         src/Renderer/Shapes.h
         src/Renderer/ShapeUtility.cpp
-        src/Renderer/ShapeUtility.h)
+        src/Renderer/ShapeUtility.h
+        src/Core/EventBus.cpp
+        src/Core/EventBus.h)
 
 include(FetchContent)
 

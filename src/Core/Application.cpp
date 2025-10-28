@@ -7,9 +7,8 @@
 
 #include "Renderer/Renderer.h"
 
-Application::Application(std::vector<std::unique_ptr<ILayer> > layers, int width, int height)
-	: layers_(std::move(layers))
-	, window_(nullptr)
+Application::Application(int width, int height)
+	: window_(nullptr)
 	, width_(width)
 	, height_(height)
 {
@@ -40,10 +39,6 @@ Application::Application(std::vector<std::unique_ptr<ILayer> > layers, int width
 		return;
 	}
 
-	for (const std::unique_ptr<ILayer>& layer : layers_)
-	{
-		layer->OnInit();
-	}
 }
 
 Application::~Application()
@@ -54,6 +49,11 @@ Application::~Application()
 
 void Application::Run()
 {
+	for (const std::unique_ptr<ILayer>& layer : layers_)
+	{
+		layer->OnInit();
+	}
+
 	Renderer renderer(width_, height_);
 	float lastFrame = 0.0f;
 	while (!glfwWindowShouldClose(window_))
@@ -87,8 +87,8 @@ void Application::Update(float deltaTime)
 
 void Application::Render(Renderer& renderer)
 {
-//	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-	glClearColor(0.0f,0.0f,0.0f, 1.0f);
+	//	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	for (const std::unique_ptr<ILayer>& layer : layers_)
 	{
