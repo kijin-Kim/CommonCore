@@ -68,7 +68,7 @@ void Renderer::DrawCircle(const glm::vec2& position, float radius, const glm::ve
 	Draw(circleVao_, GL_TRIANGLE_FAN, static_cast<GLsizei>(ShapeUtility::UnitCircleVertices.size()), transform, color);
 }
 
-void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color)
+void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color, bool bOutline)
 {
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, glm::vec3(position, 0.0f));
@@ -77,8 +77,9 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 	shader_.SetMat4("u_Model", transform);
 	shader_.SetVec4("u_Color", color);
 	glBindVertexArray(squareVao_);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(bOutline ? GL_LINE_LOOP : GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+
 
 void Renderer::BeginScene()
 {
