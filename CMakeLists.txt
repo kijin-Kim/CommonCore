@@ -12,7 +12,9 @@ add_library(CommonCore ${COMMON_SOURCE_FILES}
         src/Renderer/ShapeUtility.cpp
         src/Renderer/ShapeUtility.h
         src/Core/EventBus.cpp
-        src/Core/EventBus.h)
+        src/Core/EventBus.h
+        src/Core/IniParser.cpp
+        src/Core/IniParser.h)
 
 include(FetchContent)
 
@@ -73,7 +75,7 @@ target_include_directories(CommonCore PUBLIC
 )
 
 set(ASSET_DIR_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(CommonCore PUBLIC ASSET_DIR_PATH="${ASSET_DIR_PATH}" GLFW_INCLUDE_NONE)
+target_compile_definitions(CommonCore PUBLIC ASSET_DIR_PATH="${ASSET_DIR_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL)
 
 
 
