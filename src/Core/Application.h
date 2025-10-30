@@ -15,7 +15,7 @@ public:
 	template<typename T, typename... Args>
 	void AddLayer(Args&&... args)
 	{
-		layers_.push_back(std::make_unique<T>(eventBus_, std::forward<Args>(args)...));
+		layers_.push_back(std::make_unique<T>(std::forward<Args>(args)...));
 	}
 	void Run();
 	void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height);
@@ -29,5 +29,4 @@ private:
 	GLFWwindow* window_;
 	int width_;
 	int height_;
-	EventBus eventBus_;
 };

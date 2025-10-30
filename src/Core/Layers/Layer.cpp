@@ -1,7 +1,6 @@
 #include "Layer.h"
 
-ILayer::ILayer(EventBus& eventBus)
-	: eventBus_(eventBus)
+ILayer::ILayer()
 {
 }
 
