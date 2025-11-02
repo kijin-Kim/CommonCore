@@ -31,7 +31,7 @@ Application::Application(int width, int height)
 			Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
 			app->OnFramebufferSizeChanged(window, width, height);
 		});
-	glfwSwapInterval(1); // VSync
+	glfwSwapInterval(0); // VSync Off
 
 	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{

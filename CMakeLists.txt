@@ -14,7 +14,9 @@ add_library(CommonCore ${COMMON_SOURCE_FILES}
         src/Core/EventBus.cpp
         src/Core/EventBus.h
         src/Core/IniParser.cpp
-        src/Core/IniParser.h)
+        src/Core/IniParser.h
+        src/Core/JobSystem.cpp
+        src/Core/JobSystem.h)
 
 include(FetchContent)
 
