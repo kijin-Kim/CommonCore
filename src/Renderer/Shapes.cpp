@@ -7,7 +7,6 @@
 
 #include "glm/ext/matrix_transform.hpp"
 
-
 ConvexShape::ConvexShape(const std::vector<glm::vec2>& vertices)
 {
 	vertices_ = vertices;
@@ -55,7 +54,6 @@ void CircleShape::Draw(Renderer& renderer, const glm::vec2& position, float rota
 RectangleShape::RectangleShape(const glm::vec2& size)
 	: size_(size)
 {
-
 	vertices_ = ShapeUtility::SquareVertices;
 	for (glm::vec2& vertex : vertices_)
 	{

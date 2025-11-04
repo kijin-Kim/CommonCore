@@ -50,6 +50,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
+FetchContent_Declare(
+        tracy
+        GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+        GIT_TAG v0.12.2
+)
+FetchContent_MakeAvailable(tracy)
+
 file(GLOB IMGUI_SRC
         ${imgui_SOURCE_DIR}/*.cpp
         ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
@@ -70,6 +77,7 @@ target_link_libraries(CommonCore
         glfw
         glm
         imgui_lib
+        TracyClient
 )
 
 target_include_directories(CommonCore PUBLIC
@@ -77,7 +85,7 @@ target_include_directories(CommonCore PUBLIC
 )
 
 set(ASSET_DIR_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(CommonCore PUBLIC ASSET_DIR_PATH="${ASSET_DIR_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL)
+target_compile_definitions(CommonCore PUBLIC ASSET_DIR_PATH="${ASSET_DIR_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL TRACY_ENABLE)
 
 
 

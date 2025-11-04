@@ -5,7 +5,6 @@
 #include <string>
 #include <unordered_map>
 
-
 struct Section
 {
 	std::unordered_map<std::string, std::string> values;

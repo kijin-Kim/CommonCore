@@ -12,8 +12,7 @@ public:
 	class EventHandle
 	{
 	public:
-		template <typename T>
-		void CreateNewHandle()
+		template <typename T> void CreateNewHandle()
 		{
 			static size_t nextValue = 0;
 			id_ = nextValue++;
@@ -25,19 +24,14 @@ public:
 			return id_ == other.id_ && typeidHashCode_ == other.typeidHashCode_;
 		}
 
-		size_t GetTypeHashCode() const
-		{
-			return typeidHashCode_;
-		}
+		size_t GetTypeHashCode() const { return typeidHashCode_; }
 
 	private:
 		size_t id_;
 		size_t typeidHashCode_;
 	};
 
-
-	template <typename T>
-	using Fn = std::function<void(const T&)>;
+	template <typename T> using Fn = std::function<void(const T&)>;
 
 	static EventBus& GetInstance()
 	{
@@ -45,15 +39,11 @@ public:
 		return instance;
 	}
 
-	template <typename T>
-	EventHandle Subscribe(Fn<T> eventFn)
+	template <typename T> EventHandle Subscribe(Fn<T> eventFn)
 	{
 		EventHandle handle;
 		handle.CreateNewHandle<T>();
-		auto function = [eventFn](const IEvent& e)
-		{
-			eventFn(static_cast<const T&>(e));
-		};
+		auto function = [eventFn](const IEvent& e) { eventFn(static_cast<const T&>(e)); };
 		eventFunctions_[typeid(T).hash_code()].emplace_back(handle, function);
 		return handle;
 	}
@@ -64,14 +54,11 @@ public:
 		if (it != eventFunctions_.end())
 		{
 			std::vector<EventFunction>& handlers = it->second;
-			handlers.erase(std::remove_if(
-					handlers.begin(),
-					handlers.end(),
-					[handle](const EventFunction& handler) { return handler.Handle == handle; }),
-				handlers.end());
+			handlers.erase(std::remove_if(handlers.begin(), handlers.end(),
+										  [handle](const EventFunction& handler) { return handler.Handle == handle; }),
+						   handlers.end());
 		}
 	}
-
 
 	void Publish(const IEvent& e)
 	{
@@ -95,5 +82,5 @@ private:
 	EventBus() = default;
 
 private:
-	std::unordered_map<size_t, std::vector<EventFunction> > eventFunctions_;
+	std::unordered_map<size_t, std::vector<EventFunction>> eventFunctions_;
 };

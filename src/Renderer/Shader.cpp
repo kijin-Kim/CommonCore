@@ -2,10 +2,10 @@
 
 #include <filesystem>
 
-#include <glad/glad.h>
 #include <fstream>
-#include <sstream>
+#include <glad/glad.h>
 #include <iostream>
+#include <sstream>
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {

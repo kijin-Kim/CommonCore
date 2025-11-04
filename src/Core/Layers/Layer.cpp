@@ -1,21 +1,11 @@
 #include "Layer.h"
 
-ILayer::ILayer()
-{
-}
+ILayer::ILayer() {}
 
-void ILayer::OnInit()
-{
-}
+void ILayer::OnInit() {}
 
-void ILayer::OnDestroy()
-{
-}
+void ILayer::OnDestroy() {}
 
-void ILayer::OnUpdate(float deltaTime)
-{
-}
+void ILayer::OnUpdate(float deltaTime) {}
 
-void ILayer::OnRender(Renderer& renderer)
-{
-}
+void ILayer::OnRender(Renderer& renderer) {}

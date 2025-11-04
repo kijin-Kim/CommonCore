@@ -1,11 +1,14 @@
 #include "Application.h"
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 #include <glm/glm.hpp>
 #include <iostream>
 
 #include "Renderer/Renderer.h"
+
+#include "tracy/Tracy.hpp"
+#include "tracy/TracyOpenGL.hpp"
 
 Application::Application(int width, int height)
 	: window_(nullptr)
@@ -26,11 +29,11 @@ Application::Application(int width, int height)
 	glfwSetWindowUserPointer(window_, this);
 	glfwMakeContextCurrent(window_);
 	glfwSetFramebufferSizeCallback(window_,
-		[](GLFWwindow* window, int width, int height)
-		{
-			Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-			app->OnFramebufferSizeChanged(window, width, height);
-		});
+								   [](GLFWwindow* window, int width, int height)
+								   {
+									   Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+									   app->OnFramebufferSizeChanged(window, width, height);
+								   });
 	glfwSwapInterval(0); // VSync Off
 
 	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
@@ -38,7 +41,7 @@ Application::Application(int width, int height)
 		std::cerr << "GLAD init failed\n";
 		return;
 	}
-
+	TracyGpuContext;
 }
 
 Application::~Application()
@@ -63,6 +66,8 @@ void Application::Run()
 		lastFrame = currentFrame;
 		Update(deltaTime);
 		Render(renderer);
+		TracyGpuCollect;
+		FrameMark;
 	}
 
 	for (const std::unique_ptr<ILayer>& layer : layers_)
@@ -87,13 +92,12 @@ void Application::Update(float deltaTime)
 
 void Application::Render(Renderer& renderer)
 {
-	//	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+	TracyGpuZone("Application::Render");
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	for (const std::unique_ptr<ILayer>& layer : layers_)
 	{
 		layer->OnRender(renderer);
 	}
-
 	glfwSwapBuffers(window_);
 }
