@@ -80,10 +80,14 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 	glDrawElements(bOutline ? GL_LINE_LOOP : GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
+
 void Renderer::BeginScene()
 {
 	shader_.Use();
 	shader_.SetMat4("u_ViewProjection", projection_);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
 void Renderer::EndScene() {}
