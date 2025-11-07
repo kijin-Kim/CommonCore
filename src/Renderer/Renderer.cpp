@@ -79,6 +79,24 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 	glBindVertexArray(squareVao_);
 	glDrawElements(bOutline ? GL_LINE_LOOP : GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness)
+{
+	glm::vec2 direction = end - start;
+	float length = glm::length(direction);
+	float angle = atan2(direction.y, direction.x);
+
+	glm::mat4 transform = glm::mat4(1.0f);
+	glm::vec2 midPoint = start + direction * 0.5f;
+	transform = glm::translate(transform, glm::vec3(midPoint, 0.0f));
+	transform = glm::rotate(transform, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	transform = glm::scale(transform, glm::vec3(length, thickness, 1.0f));
+
+	shader_.SetMat4("u_Model", transform);
+	shader_.SetVec4("u_Color", color);
+	glBindVertexArray(squareVao_);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+}
 
 
 void Renderer::BeginScene()

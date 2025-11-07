@@ -16,3 +16,4 @@ BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 PackConstructorInitializers: Never
 AllowShortFunctionsOnASingleLine: Inline
+NamespaceIndentation: All

@@ -14,6 +14,7 @@ public:
 	void DrawCircle(const glm::vec2& position, float radius, const glm::vec4& color);
 	void DrawRectangle(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color,
 					   bool bOutline = false);
+	void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness = 1.0f);
 
 	void BeginScene();
 	void EndScene();
