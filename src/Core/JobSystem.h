@@ -11,13 +11,18 @@
 class JobSystem
 {
 public:
-	explicit JobSystem(size_t threadCount = std::thread::hardware_concurrency());
+	static JobSystem& GetInstance()
+	{
+		static JobSystem instance(std::thread::hardware_concurrency());
+		return instance;
+	}
 	~JobSystem();
 	void Prepare(size_t jobCount);
 	void Enqueue(std::function<void()> fun);
 	void WaitAll();
 
 private:
+	explicit JobSystem(size_t threadCount);
 	void WorkerLoop(int index);
 
 private:
