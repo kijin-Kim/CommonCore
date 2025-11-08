@@ -95,7 +95,6 @@ void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm:
 	shader_.SetVec4("u_Color", color);
 	glBindVertexArray(squareVao_);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 }
 
 

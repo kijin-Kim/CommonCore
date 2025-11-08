@@ -66,6 +66,13 @@ private:
 	std::unordered_map<std::string, Section> sections;
 };
 
+
+inline void Trim(std::string& str)
+{
+	str.erase(0, str.find_first_not_of(" \t"));
+	str.erase(str.find_last_not_of(" \t") + 1);
+}
+
 inline IniFile ParseIniFile(const std::filesystem::path& filePath)
 {
 	IniFile iniFile;
@@ -80,6 +87,7 @@ inline IniFile ParseIniFile(const std::filesystem::path& filePath)
 	std::string line;
 	while (std::getline(file, line))
 	{
+		Trim(line);
 		if (line.empty())
 		{
 			continue;
@@ -96,6 +104,8 @@ inline IniFile ParseIniFile(const std::filesystem::path& filePath)
 		{
 			std::string key = line.substr(0, equalsPos);
 			std::string value = line.substr(equalsPos + 1);
+			Trim(key);
+			Trim(value);
 			iniFile.SetString(currentSection, key, value);
 		}
 	}
