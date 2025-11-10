@@ -1,7 +1,5 @@
 #pragma once
-#include <vector>
 
-#include "Core/EventBus.h"
 
 class EventBus;
 class Renderer;
@@ -18,4 +16,6 @@ public:
 	virtual void OnUpdate(float deltaTime);
 
 	virtual void OnRender(Renderer& renderer);
+	virtual bool OnMouseButtonEvent(int button, int action, int mods) { return false; }
+	virtual bool OnKeyEvent(int key, int scancode, int action, int mods) { return false; }
 };

@@ -10,17 +10,17 @@
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyOpenGL.hpp"
 
-Application::Application(int width, int height)
-	: window_(nullptr)
-	, width_(width)
-	, height_(height)
+
+void Application::Initialize(const ApplicationSettings& settings)
 {
+	settings_ = settings;
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window_ = glfwCreateWindow(width_, height_, "OpenGL + ImGui", nullptr, nullptr);
+	window_ = glfwCreateWindow(settings_.Width, settings_.Height, "OpenGL + ImGui", nullptr, nullptr);
 	if (!window_)
 	{
 		return;
@@ -42,8 +42,20 @@ Application::Application(int width, int height)
 		return;
 	}
 	TracyGpuContext;
-}
 
+	glfwSetMouseButtonCallback(window_,
+							   [](GLFWwindow* window, int button, int action, int mods)
+							   {
+								   Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+								   app->OnMouseButtonEvent(window, button, action, mods);
+							   });
+	glfwSetKeyCallback(window_,
+					   [](GLFWwindow* window, int key, int scancode, int action, int mods)
+					   {
+						   Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+						   app->OnKeyEvent(window, key, scancode, action, mods);
+					   });
+}
 Application::~Application()
 {
 	glfwDestroyWindow(window_);
@@ -52,12 +64,12 @@ Application::~Application()
 
 void Application::Run()
 {
-	for (const std::unique_ptr<ILayer>& layer : layers_)
+	for (const std::shared_ptr<ILayer>& layer : layers_)
 	{
 		layer->OnInit();
 	}
 
-	Renderer renderer(width_, height_);
+	renderer_.Init(settings_.Width, settings_.Height);
 	float lastFrame = 0.0f;
 	while (!glfwWindowShouldClose(window_))
 	{
@@ -65,12 +77,12 @@ void Application::Run()
 		const float deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		Update(deltaTime);
-		Render(renderer);
+		Render();
 		TracyGpuCollect;
 		FrameMark;
 	}
 
-	for (const std::unique_ptr<ILayer>& layer : layers_)
+	for (const std::shared_ptr<ILayer>& layer : layers_)
 	{
 		layer->OnDestroy();
 	}
@@ -78,26 +90,64 @@ void Application::Run()
 
 void Application::OnFramebufferSizeChanged(GLFWwindow* window, int width, int height)
 {
+	settings_.Width = width;
+	settings_.Height = height;
 	glViewport(0, 0, width, height);
+}
+void Application::OnMouseButtonEvent(GLFWwindow* window, int button, int action, int mods)
+{
+	for (const std::shared_ptr<ILayer>& layer : layers_)
+	{
+		if (layer->OnMouseButtonEvent(button, action, mods))
+		{
+			break;
+		}
+	}
+}
+void Application::OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	for (const std::shared_ptr<ILayer>& layer : layers_)
+	{
+		if (layer->OnKeyEvent(key, scancode, action, mods))
+		{
+			break;
+		}
+	}
+}
+glm::vec2 Application::GetWorldCursorPosition() const
+{
+	double mouseX;
+	double mouseY;
+	glfwGetCursorPos(glfwGetCurrentContext(), &mouseX, &mouseY);
+	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
+	int width = settings.Width;
+	int height = settings.Height;
+	glm::mat4 projection = renderer_.GetProjectionMatrix();
+	mouseX = mouseX / width * 2.0f - 1.0f;
+	mouseY = 1.0f - mouseY / height * 2.0f;
+
+	glm::vec4 mousePosNDC = glm::vec4(static_cast<float>(mouseX), static_cast<float>(mouseY), 0.0f, 1.0f);
+	glm::vec4 worldPos = glm::inverse(projection) * mousePosNDC;
+	return glm::vec2(worldPos.x, worldPos.y);
 }
 
 void Application::Update(float deltaTime)
 {
 	glfwPollEvents();
-	for (const std::unique_ptr<ILayer>& layer : layers_)
+	for (const std::shared_ptr<ILayer>& layer : layers_)
 	{
 		layer->OnUpdate(deltaTime);
 	}
 }
 
-void Application::Render(Renderer& renderer)
+void Application::Render()
 {
 	TracyGpuZone("Application::Render");
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	for (const std::unique_ptr<ILayer>& layer : layers_)
+	for (const std::shared_ptr<ILayer>& layer : layers_)
 	{
-		layer->OnRender(renderer);
+		layer->OnRender(renderer_);
 	}
 	glfwSwapBuffers(window_);
 }
