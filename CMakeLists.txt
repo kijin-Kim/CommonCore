@@ -16,7 +16,13 @@ add_library(CommonCore ${COMMON_SOURCE_FILES}
         src/Core/IniParser.cpp
         src/Core/IniParser.h
         src/Core/JobSystem.cpp
-        src/Core/JobSystem.h)
+        src/Core/JobSystem.h
+        src/Renderer/TextureManager.cpp
+        src/Renderer/TextureManager.h
+        src/Renderer/TextureManager.cpp
+        src/Renderer/TextureManager.h
+        src/Core/Delegate.cpp
+        src/Core/Delegate.h)
 
 include(FetchContent)
 
@@ -90,10 +96,11 @@ target_link_libraries(CommonCore
 
 target_include_directories(CommonCore PUBLIC
         ${CommonCore_SOURCE_DIR}/src
+        ${CommonCore_SOURCE_DIR}/external
 )
 
-set(ASSET_DIR_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(CommonCore PUBLIC ASSET_DIR_PATH="${ASSET_DIR_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL TRACY_ENABLE)
+set(CORE_ASSET_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
+target_compile_definitions(CommonCore PUBLIC CORE_ASSET_PATH="${CORE_ASSET_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL TRACY_ENABLE STB_IMAGE_IMPLEMENTATION)
 
 
 

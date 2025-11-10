@@ -27,7 +27,7 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 
 std::string Shader::LoadShaderSource(const std::string& path)
 {
-	std::filesystem::path filepath = ASSET_DIR_PATH;
+	std::filesystem::path filepath = CORE_ASSET_PATH;
 	filepath /= path;
 	std::ifstream file(filepath);
 	if (file.is_open())
