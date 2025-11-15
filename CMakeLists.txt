@@ -17,12 +17,17 @@ add_library(CommonCore ${COMMON_SOURCE_FILES}
         src/Core/IniParser.h
         src/Core/JobSystem.cpp
         src/Core/JobSystem.h
-        src/Renderer/TextureManager.cpp
-        src/Renderer/TextureManager.h
-        src/Renderer/TextureManager.cpp
-        src/Renderer/TextureManager.h
+        src/Renderer/ResourceManager.cpp
+        src/Renderer/ResourceManager.h
+        src/Renderer/ResourceManager.cpp
+        src/Renderer/ResourceManager.h
         src/Core/Delegate.cpp
-        src/Core/Delegate.h)
+        src/Core/Delegate.h
+        src/Renderer/FrameBuffer.cpp
+        src/Renderer/FrameBuffer.h
+        src/Renderer/ImageTexture.cpp
+        src/Renderer/ImageTexture.h
+        src/Core/Assert.h)
 
 include(FetchContent)
 
@@ -52,7 +57,7 @@ FetchContent_MakeAvailable(glm)
 FetchContent_Declare(
         imgui
         GIT_REPOSITORY https://github.com/ocornut/imgui.git
-        GIT_TAG v1.91.5
+        GIT_TAG v1.91.5-docking
 )
 FetchContent_MakeAvailable(imgui)
 
@@ -74,12 +79,14 @@ file(GLOB IMGUI_SRC
         ${imgui_SOURCE_DIR}/*.cpp
         ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
         ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+        ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
 )
 
 add_library(imgui_lib ${IMGUI_SRC})
 target_include_directories(imgui_lib PUBLIC
         ${imgui_SOURCE_DIR}
         ${imgui_SOURCE_DIR}/backends
+        ${imgui_SOURCE_DIR}/misc/cpp
 )
 target_link_libraries(imgui_lib PUBLIC glfw glad_lib)
 

@@ -12,7 +12,7 @@ struct GLFWwindow;
 class Application
 {
 public:
-	struct ApplicationSettings
+	struct Settings
 	{
 		int Width = 1920;
 		int Height = 1080;
@@ -25,7 +25,7 @@ public:
 		return instance;
 	}
 
-	void Initialize(const ApplicationSettings& settings);
+	void Initialize(const Settings& settings);
 	~Application();
 
 	template <typename T, typename... Args>
@@ -40,9 +40,8 @@ public:
 	void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height);
 	void OnMouseButtonEvent(GLFWwindow* window, int button, int action, int mods);
 	void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
-	const ApplicationSettings& GetSettings() const { return settings_; }
+	const Settings& GetSettings() const { return settings_; }
 
-	glm::vec2 GetWorldCursorPosition() const;
 
 private:
 	Application() = default;
@@ -50,7 +49,7 @@ private:
 	void Render();
 
 private:
-	ApplicationSettings settings_;
+	Settings settings_;
 	std::vector<std::shared_ptr<ILayer>> layers_;
 	GLFWwindow* window_;
 	Renderer renderer_;

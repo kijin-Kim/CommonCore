@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include <glm/vec2.hpp>
 #include <vector>
 

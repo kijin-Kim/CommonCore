@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "Core/Application.h"
+
 #include "ShapeUtility.h"
 #include "Shapes.h"
 
@@ -71,10 +72,9 @@ void Renderer::Draw(unsigned int vao, GLenum mode, GLsizei vertexCount, const gl
 					const glm::vec4& color)
 {
 	basicShader_.Use();
-	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
-	projection_ = glm::ortho(-static_cast<float>(settings.Width) / 2.0f, static_cast<float>(settings.Width) / 2.0f,
-							 -static_cast<float>(settings.Height) / 2.0f, static_cast<float>(settings.Height) / 2.0f,
-							 -1.0f, 1.0f);
+	projection_
+		= glm::ortho(-static_cast<float>(screenWidth_) / 2.0f, static_cast<float>(screenWidth_) / 2.0f,
+					 -static_cast<float>(screenHeight_) / 2.0f, static_cast<float>(screenHeight_) / 2.0f, -1.0f, 1.0f);
 	basicShader_.SetMat4("u_ViewProjection", projection_);
 	basicShader_.SetMat4("u_Model", transform);
 	basicShader_.SetVec4("u_Color", color);
@@ -85,10 +85,9 @@ void Renderer::Draw(unsigned int vao, GLenum mode, GLsizei vertexCount, const gl
 void Renderer::DrawCircle(const glm::vec2& position, float radius, const glm::vec4& color)
 {
 	basicShader_.Use();
-	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
-	projection_ = glm::ortho(-static_cast<float>(settings.Width) / 2.0f, static_cast<float>(settings.Width) / 2.0f,
-							 -static_cast<float>(settings.Height) / 2.0f, static_cast<float>(settings.Height) / 2.0f,
-							 -1.0f, 1.0f);
+	projection_
+		= glm::ortho(-static_cast<float>(screenWidth_) / 2.0f, static_cast<float>(screenWidth_) / 2.0f,
+					 -static_cast<float>(screenHeight_) / 2.0f, static_cast<float>(screenHeight_) / 2.0f, -1.0f, 1.0f);
 	basicShader_.SetMat4("u_ViewProjection", projection_);
 
 	glm::mat4 transform = glm::mat4(1.0f);
@@ -101,10 +100,9 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 							 bool bOutline)
 {
 	basicShader_.Use();
-	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
-	projection_ = glm::ortho(-static_cast<float>(settings.Width) / 2.0f, static_cast<float>(settings.Width) / 2.0f,
-							 -static_cast<float>(settings.Height) / 2.0f, static_cast<float>(settings.Height) / 2.0f,
-							 -1.0f, 1.0f);
+	projection_
+		= glm::ortho(-static_cast<float>(screenWidth_) / 2.0f, static_cast<float>(screenWidth_) / 2.0f,
+					 -static_cast<float>(screenHeight_) / 2.0f, static_cast<float>(screenHeight_) / 2.0f, -1.0f, 1.0f);
 	basicShader_.SetMat4("u_ViewProjection", projection_);
 
 	glm::mat4 transform = glm::mat4(1.0f);
@@ -118,13 +116,13 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 	glDrawElements(bOutline ? GL_LINE_LOOP : GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, std::shared_ptr<Texture> texture)
+void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, std::shared_ptr<ImageTexture> texture)
 {
 	textureShader_.Use();
-	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
-	projection_ = glm::ortho(-static_cast<float>(settings.Width) / 2.0f, static_cast<float>(settings.Width) / 2.0f,
-							 -static_cast<float>(settings.Height) / 2.0f, static_cast<float>(settings.Height) / 2.0f,
-							 -1.0f, 1.0f);
+	const Application::Settings& settings = Application::GetInstance().GetSettings();
+	projection_
+		= glm::ortho(-static_cast<float>(screenWidth_) / 2.0f, static_cast<float>(screenWidth_) / 2.0f,
+					 -static_cast<float>(screenHeight_) / 2.0f, static_cast<float>(screenHeight_) / 2.0f, -1.0f, 1.0f);
 	textureShader_.SetMat4("u_ViewProjection", projection_);
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, glm::vec3(position, 0.0f));
@@ -143,10 +141,9 @@ void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, 
 void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness)
 {
 	basicShader_.Use();
-	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
-	projection_ = glm::ortho(-static_cast<float>(settings.Width) / 2.0f, static_cast<float>(settings.Width) / 2.0f,
-							 -static_cast<float>(settings.Height) / 2.0f, static_cast<float>(settings.Height) / 2.0f,
-							 -1.0f, 1.0f);
+	projection_
+		= glm::ortho(-static_cast<float>(screenWidth_) / 2.0f, static_cast<float>(screenWidth_) / 2.0f,
+					 -static_cast<float>(screenHeight_) / 2.0f, static_cast<float>(screenHeight_) / 2.0f, -1.0f, 1.0f);
 
 	basicShader_.SetMat4("u_ViewProjection", projection_);
 
@@ -166,10 +163,31 @@ void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm:
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::BeginScene()
+void Renderer::BeginScene(const std::shared_ptr<Framebuffer>& framebuffer)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	if (framebuffer)
+	{
+		screenWidth_ = framebuffer->GetWidth();
+		screenHeight_ = framebuffer->GetHeight();
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->GetFboId());
+	}
+	else
+	{
+		const Application::Settings& settings = Application::GetInstance().GetSettings();
+		screenWidth_ = settings.Width;
+		screenHeight_ = settings.Height;
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+}
+void Renderer::Clear(const glm::vec4& clearColor)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::EndScene() {}
+void Renderer::EndScene()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}

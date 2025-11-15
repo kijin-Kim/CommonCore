@@ -11,7 +11,7 @@
 #include "tracy/TracyOpenGL.hpp"
 
 
-void Application::Initialize(const ApplicationSettings& settings)
+void Application::Initialize(const Settings& settings)
 {
 	settings_ = settings;
 
@@ -113,22 +113,6 @@ void Application::OnKeyEvent(GLFWwindow* window, int key, int scancode, int acti
 			break;
 		}
 	}
-}
-glm::vec2 Application::GetWorldCursorPosition() const
-{
-	double mouseX;
-	double mouseY;
-	glfwGetCursorPos(glfwGetCurrentContext(), &mouseX, &mouseY);
-	const Application::ApplicationSettings& settings = Application::GetInstance().GetSettings();
-	int width = settings.Width;
-	int height = settings.Height;
-	glm::mat4 projection = renderer_.GetProjectionMatrix();
-	mouseX = mouseX / width * 2.0f - 1.0f;
-	mouseY = 1.0f - mouseY / height * 2.0f;
-
-	glm::vec4 mousePosNDC = glm::vec4(static_cast<float>(mouseX), static_cast<float>(mouseY), 0.0f, 1.0f);
-	glm::vec4 worldPos = glm::inverse(projection) * mousePosNDC;
-	return glm::vec2(worldPos.x, worldPos.y);
 }
 
 void Application::Update(float deltaTime)
