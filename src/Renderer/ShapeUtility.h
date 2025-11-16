@@ -30,9 +30,4 @@ namespace ShapeUtility
 		glm::vec2 TexCoord;
 	};
 
-	inline static std::vector<TextureVertex> TexturedSquareVertices = {{glm::vec2(-0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
-																	   {glm::vec2(0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},
-																	   {glm::vec2(0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},
-																	   {glm::vec2(-0.5f, 0.5f), glm::vec2(0.0f, 1.0f)}};
-
 }; // namespace ShapeUtility

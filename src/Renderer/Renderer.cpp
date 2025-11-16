@@ -56,8 +56,7 @@ void Renderer::Init(int width, int height)
 	glGenBuffers(1, &texturedSquareEbo_);
 	glBindVertexArray(texturedSquareVao_);
 	glBindBuffer(GL_ARRAY_BUFFER, texturedSquareVbo_);
-	glBufferData(GL_ARRAY_BUFFER, ShapeUtility::TexturedSquareVertices.size() * sizeof(ShapeUtility::TextureVertex),
-				 ShapeUtility::TexturedSquareVertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ShapeUtility::TextureVertex) * 4, nullptr, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ShapeUtility::TextureVertex),
 						  reinterpret_cast<void*>(offsetof(ShapeUtility::TextureVertex, Position)));
@@ -115,8 +114,8 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 	glBindVertexArray(squareVao_);
 	glDrawElements(bOutline ? GL_LINE_LOOP : GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
-
-void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, std::shared_ptr<ImageTexture> texture)
+void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, const glm::vec2& size, std::shared_ptr<ImageTexture> texture,
+									 const TextureRegion& region)
 {
 	textureShader_.Use();
 	const Application::Settings& settings = Application::GetInstance().GetSettings();
@@ -127,13 +126,23 @@ void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, 
 	glm::mat4 transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, glm::vec3(position, 0.0f));
 	transform = glm::rotate(transform, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-	transform = glm::scale(
-		transform, glm::vec3(static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()), 1.0f));
+	transform = glm::scale(transform, glm::vec3(size, 1.0f));
 
 	textureShader_.SetMat4("u_Model", transform);
 	textureShader_.SetInt("u_Texture", 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture->GetID());
+
+	// Update UVs
+	ShapeUtility::TextureVertex vertices[4] = {
+		{{-0.5f, -0.5f}, {region.UVStart.x, region.UVEnd.y}},
+		{{0.5f, -0.5f}, {region.UVEnd.x, region.UVEnd.y}},
+		{{0.5f, 0.5f}, {region.UVEnd.x, region.UVStart.y}},
+		{{-0.5f, 0.5f}, {region.UVStart.x, region.UVStart.y}},
+	};
+	glBindBuffer(GL_ARRAY_BUFFER, texturedSquareVbo_);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
 	glBindVertexArray(texturedSquareVao_);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
