@@ -20,8 +20,10 @@ Renderer::~Renderer()
 
 void Renderer::Init(int width, int height)
 {
-	basicShader_ = Shader("shaders/basic.vert", "shaders/basic.frag");
-	textureShader_ = Shader("shaders/texture.vert", "shaders/texture.frag");
+	std::filesystem::path shaderPath = "shaders";
+
+	basicShader_ = Shader(shaderPath / "basic.vert", shaderPath / "basic.frag");
+	textureShader_ = Shader(shaderPath / "texture.vert", shaderPath / "texture.frag");
 	projection_ = glm::ortho(-static_cast<float>(width) / 2.0f, static_cast<float>(width) / 2.0f,
 							 -static_cast<float>(height) / 2.0f, static_cast<float>(height) / 2.0f, -1.0f, 1.0f);
 
@@ -114,8 +116,8 @@ void Renderer::DrawRectangle(const glm::vec2& position, float rotation, const gl
 	glBindVertexArray(squareVao_);
 	glDrawElements(bOutline ? GL_LINE_LOOP : GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
-void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, const glm::vec2& size, std::shared_ptr<ImageTexture> texture,
-									 const TextureRegion& region)
+void Renderer::DrawTexturedRectangle(const glm::vec2& position, float rotation, const glm::vec2& size,
+									 std::shared_ptr<ImageTexture> texture, const TextureRegion& region)
 {
 	textureShader_.Use();
 	const Application::Settings& settings = Application::GetInstance().GetSettings();

@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include <glm/glm.hpp>
 #include <string>
 
@@ -6,7 +7,7 @@ class Shader
 {
 public:
 	Shader() = default;
-	Shader(const std::string& vertexPath, const std::string& fragmentPath);
+	Shader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath);
 	void Use() const;
 	void SetBool(const std::string& name, bool value) const;
 	void SetInt(const std::string& name, int value) const;
@@ -16,7 +17,7 @@ public:
 	void SetMat4(const std::string& name, const glm::mat4& mat) const;
 
 private:
-	std::string LoadShaderSource(const std::string& path);
+	std::string LoadShaderSource(const std::filesystem::path& path);
 	unsigned int CompileShader(unsigned int type, const std::string& source);
 	void CheckCompileErrors(unsigned int shader, const std::string& type);
 

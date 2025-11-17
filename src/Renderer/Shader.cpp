@@ -7,7 +7,17 @@
 #include <iostream>
 #include <sstream>
 
-Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+namespace
+{
+	std::filesystem::path GetExecutablePath()
+	{
+		char path[MAX_PATH];
+		GetModuleFileNameA(NULL, path, MAX_PATH);
+		return std::filesystem::path(path).parent_path();
+	}
+}
+
+Shader::Shader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath)
 {
 	std::string vertexCode = LoadShaderSource(vertexPath);
 	std::string fragmentCode = LoadShaderSource(fragmentPath);
@@ -25,10 +35,10 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 	glDeleteShader(fragment);
 }
 
-std::string Shader::LoadShaderSource(const std::string& path)
+std::string Shader::LoadShaderSource(const std::filesystem::path& path)
 {
-	std::filesystem::path filepath = CORE_ASSET_PATH;
-	filepath /= path;
+	std::filesystem::path exePath = GetExecutablePath();
+	std::filesystem::path filepath = exePath / "Assets" / path;
 	std::ifstream file(filepath);
 	if (file.is_open())
 	{
