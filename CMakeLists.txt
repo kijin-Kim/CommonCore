@@ -107,7 +107,8 @@ target_include_directories(CommonCore PUBLIC
 )
 
 set(CORE_ASSET_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(CommonCore PUBLIC CORE_ASSET_PATH="${CORE_ASSET_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL TRACY_ENABLE STB_IMAGE_IMPLEMENTATION)
+target_compile_definitions(CommonCore PUBLIC CORE_ASSET_PATH="${CORE_ASSET_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL STB_IMAGE_IMPLEMENTATION)
+target_compile_definitions(CommonCore PUBLIC $<$<CONFIG:Debug>:TRACY_ENABLE>)
 
 
 
