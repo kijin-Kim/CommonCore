@@ -44,6 +44,7 @@ FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw.git
         GIT_TAG 3.4
+        EXCLUDE_FROM_ALL
 )
 FetchContent_MakeAvailable(glfw)
 
@@ -68,10 +69,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
+
 FetchContent_Declare(
         tracy
         GIT_REPOSITORY https://github.com/wolfpld/tracy.git
         GIT_TAG v0.12.2
+        EXCLUDE_FROM_ALL
 )
 FetchContent_MakeAvailable(tracy)
 
@@ -106,9 +109,5 @@ target_include_directories(CommonCore PUBLIC
         ${CommonCore_SOURCE_DIR}/external
 )
 
-set(CORE_ASSET_PATH "${CommonCore_SOURCE_DIR}/src/Renderer/Assets/")
-target_compile_definitions(CommonCore PUBLIC CORE_ASSET_PATH="${CORE_ASSET_PATH}" GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL STB_IMAGE_IMPLEMENTATION)
+target_compile_definitions(CommonCore PUBLIC GLFW_INCLUDE_NONE GLM_ENABLE_EXPERIMENTAL STB_IMAGE_IMPLEMENTATION)
 target_compile_definitions(CommonCore PUBLIC $<$<CONFIG:Debug>:TRACY_ENABLE>)
-
-
-
